@@ -1,12 +1,18 @@
 import React from "react";
-import InformationCard from "../../Information/InformationCard";
+import InfoCards from "../../Information/InformationCards/InfoCards";
 import Banner from "../Banner/Banner";
+import Hero from "../Hero/Hero";
+import MakeAppoinment from "../MakeAppoinment/MakeAppoinment";
+import Services from "../Services/Services/Services";
 
 const Home = () => {
   return (
     <div>
       <Banner></Banner>
-      <InformationCard />
+      <InfoCards></InfoCards>
+      <Services></Services>
+      <Hero></Hero>
+      <MakeAppoinment></MakeAppoinment>
     </div>
   );
 };
