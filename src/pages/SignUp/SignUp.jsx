@@ -1,17 +1,27 @@
 import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 const SignUp = () => {
   const { register, handleSubmit } = useForm();
-  const { createUser } = useContext(AuthContext);
+  const { createUser, updateUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const onSubmit = (data) => {
     console.log(data);
     createUser(data.email, data.password)
-      .then((res) => console.log(res.user))
+      .then((res) => {
+        updateUser({ displayName: data.name })
+          .then(() => {
+            navigate("/");
+            window.alert("updated successfully");
+          })
+          .catch((err) => console.error(err));
+        console.log(res.user);
+      })
       .catch((err) => console.log(err));
   };
+
   return (
     <div>
       <div className="flex justify-center items-center w-full  h-[800px]">

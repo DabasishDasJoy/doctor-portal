@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../../contexts/AuthProvider/AuthProvider";
 
 const Header = () => {
+  const { user, logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logout()
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
   const navlist = (
     <>
       <li>
@@ -14,14 +22,27 @@ const Header = () => {
       <li>
         <Link to={"/appoinment"}>Appoinment</Link>
       </li>
-      <li>
-        <Link>Reviews</Link>
-      </li>
+
       <li>
         <Link>Contact Us</Link>
       </li>
       <li>
-        <Link to={"/login"}>Login</Link>
+        {user && user?.uid ? (
+          <>
+            <Link to={"/dashboard"}>Dashboard</Link>
+
+            <button
+              onClick={handleLogout}
+              className="btn btn-accent text-white rounded-md"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <Link to={"/login"} className="btn btn-accent text-white rounded-md">
+            Login
+          </Link>
+        )}
       </li>
     </>
   );

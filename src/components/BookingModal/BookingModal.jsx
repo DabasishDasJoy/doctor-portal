@@ -1,11 +1,14 @@
 import { format } from "date-fns";
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 
 const BookingModal = ({
   setTreatment,
   treatment: { name, slots },
   selectedDate,
 }) => {
+  const { user } = useContext(AuthContext);
+
   const handleBooking = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -24,8 +27,22 @@ const BookingModal = ({
       slot,
       phone,
     };
-    console.log(booking);
-    setTreatment(null);
+
+    fetch("http://localhost:5000/bookings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(booking),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          window.alert("Booking successful");
+        }
+        setTreatment(null);
+      });
+    // console.log(booking);
   };
 
   return (
@@ -49,29 +66,27 @@ const BookingModal = ({
               className="input input-bordered w-full "
             />
             <select name="slot" className="select select-bordered w-full">
-              <option disabled selected>
-                Who shot first?
-              </option>
               {slots.map((slot, idx) => (
                 <option key={idx}>{slot}</option>
               ))}
             </select>
             <input
-              name="name"
-              type="text"
-              placeholder="Full Name"
+              disabled
+              defaultValue={user?.displayName}
+              type="name"
+              className="input input-bordered w-full "
+            />
+            <input
+              name="email"
+              disabled
+              type="email"
+              defaultValue={user.email}
               className="input input-bordered w-full "
             />
             <input
               name="phone"
               type="text"
               placeholder="Phone Number"
-              className="input input-bordered w-full "
-            />
-            <input
-              name="email"
-              type="email"
-              placeholder="Email"
               className="input input-bordered w-full "
             />
             <input
