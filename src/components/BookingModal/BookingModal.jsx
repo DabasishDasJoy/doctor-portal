@@ -1,28 +1,30 @@
 import { format } from "date-fns";
 import React, { useContext } from "react";
+import toast from "react-hot-toast";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
 
 const BookingModal = ({
   setTreatment,
-  treatment: { name, slots },
+  treatment: { name: treatmentName, slots },
   selectedDate,
+  refetch,
 }) => {
   const { user } = useContext(AuthContext);
-
+  const date = format(selectedDate, "PP");
   const handleBooking = (e) => {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
     const phone = form.phone.value;
     const name = form.name.value;
-    const serviceName = name;
-    const appoinmentDate = selectedDate;
+    const appoinmentDate = date;
     const slot = form.slot.value;
 
     const booking = {
+      date: date,
+      treatment: treatmentName,
       email,
       name,
-      serviceName,
       appoinmentDate,
       slot,
       phone,
@@ -38,7 +40,10 @@ const BookingModal = ({
       .then((res) => res.json())
       .then((data) => {
         if (data.acknowledged) {
-          window.alert("Booking successful");
+          toast.success("Booking successful");
+          refetch();
+        } else {
+          toast.error(data.message);
         }
         setTreatment(null);
       });
@@ -56,7 +61,7 @@ const BookingModal = ({
           >
             ✕
           </label>
-          <h3 className="text-lg font-bold">{name}</h3>
+          <h3 className="text-lg font-bold">{treatmentName}</h3>
           <form onSubmit={handleBooking} className="py-4 flex flex-col gap-3">
             <input
               disabled
@@ -73,7 +78,8 @@ const BookingModal = ({
             <input
               disabled
               defaultValue={user?.displayName}
-              type="name"
+              type="text"
+              name="name"
               className="input input-bordered w-full "
             />
             <input
