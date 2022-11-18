@@ -1,8 +1,14 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, Outlet } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthProvider/AuthProvider";
+import useIsAdmin from "../hooks/useIsAdmin";
 import Header from "../pages/Shared/Header/Header";
 
 const DashboardLayout = () => {
+  const { user } = useContext(AuthContext);
+
+  const [isAdmin] = useIsAdmin(user?.email);
+
   return (
     <div>
       <Header></Header>
@@ -21,11 +27,18 @@ const DashboardLayout = () => {
           <ul className="menu p-4 w-80 bg-base-100 text-base-content">
             {/* <!-- Sidebar content here --> */}
             <li>
-              <a>Sidebar Item 1</a>
+              <Link to={"/dashboard"}>My Appoinments</Link>
             </li>
-            <li>
-              <a>Sidebar Item 2</a>
-            </li>
+            {isAdmin && (
+              <>
+                <li>
+                  <Link to={"/dashboard/users"}>All users</Link>
+                </li>
+                <li>
+                  <Link to={"/dashboard/adddoctor"}>Add Doctor</Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>

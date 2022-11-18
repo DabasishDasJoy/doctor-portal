@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../../contexts/AuthProvider/AuthProvider";
 
@@ -7,7 +8,10 @@ const Header = () => {
 
   const handleLogout = () => {
     logout()
-      .then((res) => console.log(res))
+      .then((res) => {
+        localStorage.removeItem("accessToken");
+        toast.success("Successfully logged out");
+      })
       .catch((err) => console.log(err));
   };
   const navlist = (
