@@ -1,16 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider/AuthProvider";
+import useToken from "../../hooks/useToken";
 const Login = () => {
   const { register, handleSubmit } = useForm();
 
   const { login } = useContext(AuthContext);
+  const [userEmail, setUserEmail] = useState("");
+
+  const [token] = useToken(userEmail);
 
   const onSubmit = (data) => {
     console.log(data);
     login(data.email, data.password)
-      .then((res) => console.log(res.user))
+      .then((res) => setUserEmail(res.user.email))
       .catch((err) => console.log(err));
   };
   return (
